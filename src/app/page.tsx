@@ -13,14 +13,14 @@ const NAV_LINKS = [
 
 /* ── CARRIERS ── */
 const CARRIERS = [
-  { name: "Kaiser Permanente", domain: "kaiserpermanente.org" },
-  { name: "UnitedHealthcare", domain: "uhc.com" },
-  { name: "Blue Cross Blue Shield", domain: "bcbs.com" },
-  { name: "Cigna", domain: "cigna.com" },
-  { name: "Aetna", domain: "aetna.com" },
-  { name: "Humana", domain: "humana.com" },
-  { name: "Molina Healthcare", domain: "molinahealthcare.com" },
-  { name: "Oscar Health", domain: "hioscar.com" },
+  "Kaiser Permanente",
+  "UnitedHealthcare",
+  "Blue Cross Blue Shield",
+  "Cigna",
+  "Aetna",
+  "Humana",
+  "Molina Healthcare",
+  "Oscar Health",
 ];
 
 /* ── SERVICES ── */
@@ -284,16 +284,14 @@ export default function Home() {
 
         {/* ══ CARRIERS ══ */}
         <section className="carriers">
-          <div className="container">
+          <div className="container" style={{ padding: 0 }}>
             <p className="carriers__label">Carriers I personally compare for you</p>
           </div>
-          <div className="carriers__track">
-            <div className="carriers__list">
-              {[...CARRIERS, ...CARRIERS].map((c, i) => (
-                <div key={i} className="carrier-chip">
-                  <img src={`https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://${c.domain}&size=128`} alt={`${c.name} logo`} width="20" height="20" className="carrier-logo" loading="lazy" />
-                  {c.name}
-                </div>
+          <div className="carriers__carousel">
+            <div className="carriers__track">
+              {/* Double the list for seamless infinite scroll */}
+              {[...CARRIERS, ...CARRIERS, ...CARRIERS].map((c, i) => (
+                <div key={i} className="carrier-chip">{c}</div>
               ))}
             </div>
           </div>
