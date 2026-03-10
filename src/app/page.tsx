@@ -157,7 +157,7 @@ export default function Home() {
     <div className="site">
 
       {/* ══ TOP BAR ══ */}
-      <div className="topbar">
+      <div className="topbar" id="home">
         <div className="container topbar__inner">
           <span>Licensed Independent Broker · Serving All 50 States</span>
           <a href="tel:+13235550192" className="topbar__phone">
@@ -168,7 +168,7 @@ export default function Home() {
       </div>
 
       {/* ══ HEADER / NAV ══ */}
-      <header className="header" id="home">
+      <header className="header">
         <div className="container header__inner">
           <a href="#home" className="brand">
             <span className="brand__icon">D</span>
