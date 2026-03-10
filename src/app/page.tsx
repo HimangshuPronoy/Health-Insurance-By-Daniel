@@ -286,9 +286,11 @@ export default function Home() {
         <section className="carriers">
           <div className="container">
             <p className="carriers__label">Carriers I personally compare for you</p>
-            <div className="carriers__row">
-              {CARRIERS.map((c) => (
-                <div key={c} className="carrier-chip">{c}</div>
+          </div>
+          <div className="carriers__track">
+            <div className="carriers__list">
+              {[...CARRIERS, ...CARRIERS].map((c, i) => (
+                <div key={i} className="carrier-chip">{c}</div>
               ))}
             </div>
           </div>
