@@ -284,14 +284,14 @@ export default function Home() {
 
         {/* ══ CARRIERS ══ */}
         <section className="carriers">
-          <div className="container" style={{ padding: 0 }}>
+          <div className="container">
             <p className="carriers__label">Carriers I personally compare for you</p>
           </div>
-          <div className="carriers__carousel">
+          <div className="carriers__marquee">
             <div className="carriers__track">
-              {/* Double the list for seamless infinite scroll */}
+              {/* Render lists multiple times to ensure seamless infinite scroll on wide screens */}
               {[...CARRIERS, ...CARRIERS, ...CARRIERS].map((c, i) => (
-                <div key={i} className="carrier-chip">{c}</div>
+                <div key={`${c}-${i}`} className="carrier-chip">{c}</div>
               ))}
             </div>
           </div>

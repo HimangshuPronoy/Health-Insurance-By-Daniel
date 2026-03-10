@@ -225,7 +225,7 @@ img, svg { display: block; max-width: 100%; }
 
 /* ─── Hero ─── */
 .hero {
-  background: url('/hero-bg.jpg') center top / cover no-repeat;
+  background: url('/hero-bg.jpg') center 32% / cover no-repeat;
   padding: 5rem 0 0;
   position: relative;
   overflow: hidden;
@@ -405,41 +405,29 @@ img, svg { display: block; max-width: 100%; }
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text-muted);
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
-.carriers__carousel {
+.carriers__marquee {
+  width: 100vw;
+  max-width: 100%;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   overflow: hidden;
-  position: relative;
-  white-space: nowrap;
-}
-.carriers__carousel::before,
-.carriers__carousel::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  width: 100px;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none;
-}
-.carriers__carousel::before {
-  left: 0;
-  background: linear-gradient(to right, var(--surface-alt), transparent);
-}
-.carriers__carousel::after {
-  right: 0;
-  background: linear-gradient(to left, var(--surface-alt), transparent);
 }
 .carriers__track {
   display: flex;
+  width: max-content;
   gap: 0.8rem;
-  padding: 0 0.4rem;
-  animation: scroll 30s linear infinite;
+  padding-left: 0.8rem;
+  animation: scroll 35s linear infinite;
+}
+.carriers__track:hover {
+  animation-play-state: paused;
 }
 @keyframes scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  to { transform: translateX(calc(-50% - 0.4rem)); }
 }
 .carrier-chip {
   background: #fff;
