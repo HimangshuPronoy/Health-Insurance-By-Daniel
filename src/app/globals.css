@@ -225,7 +225,7 @@ img, svg { display: block; max-width: 100%; }
 
 /* ─── Hero ─── */
 .hero {
-  background: url('/hero-bg.jpg') center top / cover no-repeat;
+  background: url('/hero-bg.jpg') center 45% / cover no-repeat;
   padding: 5rem 0 0;
   position: relative;
   overflow: hidden;
@@ -234,7 +234,7 @@ img, svg { display: block; max-width: 100%; }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(150deg, rgba(15, 31, 61, 0.82) 0%, rgba(29, 78, 216, 0.45) 100%);
+  background: linear-gradient(150deg, rgba(15, 31, 61, 0.72) 0%, rgba(29, 78, 216, 0.35) 100%);
   pointer-events: none;
 }
 .hero__inner {
@@ -659,21 +659,21 @@ img, svg { display: block; max-width: 100%; }
   gap: 1.3rem;
 }
 .review-card {
-  background: var(--surface-alt);
+  background: #fff;
   border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 1.6rem;
+  border-radius: var(--r-md);
+  padding: 1.75rem;
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 1.1rem;
+  box-shadow: var(--s-sm);
   transition: box-shadow 0.18s;
 }
 .review-card:hover { box-shadow: var(--s-md); }
 .review-card__text {
-  font-size: 0.93rem;
+  font-size: 0.95rem;
   color: var(--text);
-  line-height: 1.7;
-  font-style: italic;
+  line-height: 1.6;
   flex: 1;
 }
 .review-card__author {

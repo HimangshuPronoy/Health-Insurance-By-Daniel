@@ -425,7 +425,7 @@ export default function Home() {
                 <div key={r.name} className="review-card">
                   <Stars count={r.stars} />
                   <blockquote className="review-card__text">
-                    &ldquo;{r.text}&rdquo;
+                    {r.text}
                   </blockquote>
                   <div className="review-card__author">
                     <div className="review-card__avatar">{r.avatar}</div>
