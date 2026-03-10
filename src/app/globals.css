@@ -447,15 +447,22 @@ img, svg { display: block; max-width: 100%; }
   100% { transform: translateX(calc(-50%)); }
 }
 .carrier-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   background: #fff;
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
-  padding: 0.35rem 1rem;
+  padding: 0.35rem 1rem 0.35rem 0.6rem;
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--text-muted);
   white-space: nowrap;
   box-shadow: var(--s-sm);
+}
+.carrier-logo {
+  border-radius: 4px;
+  object-fit: contain;
 }
 
 /* ─── Section headers ─── */

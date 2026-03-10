@@ -13,14 +13,14 @@ const NAV_LINKS = [
 
 /* ── CARRIERS ── */
 const CARRIERS = [
-  "Kaiser Permanente",
-  "UnitedHealthcare",
-  "Blue Cross Blue Shield",
-  "Cigna",
-  "Aetna",
-  "Humana",
-  "Molina Healthcare",
-  "Oscar Health",
+  { name: "Kaiser Permanente", domain: "kaiserpermanente.org" },
+  { name: "UnitedHealthcare", domain: "uhc.com" },
+  { name: "Blue Cross Blue Shield", domain: "bcbs.com" },
+  { name: "Cigna", domain: "cigna.com" },
+  { name: "Aetna", domain: "aetna.com" },
+  { name: "Humana", domain: "humana.com" },
+  { name: "Molina Healthcare", domain: "molinahealthcare.com" },
+  { name: "Oscar Health", domain: "hioscar.com" },
 ];
 
 /* ── SERVICES ── */
@@ -290,7 +290,10 @@ export default function Home() {
           <div className="carriers__track">
             <div className="carriers__list">
               {[...CARRIERS, ...CARRIERS].map((c, i) => (
-                <div key={i} className="carrier-chip">{c}</div>
+                <div key={i} className="carrier-chip">
+                  <img src={`https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://${c.domain}&size=128`} alt={`${c.name} logo`} width="20" height="20" className="carrier-logo" loading="lazy" />
+                  {c.name}
+                </div>
               ))}
             </div>
           </div>
