@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 /* ── NAV ── */
 const NAV_LINKS = [
@@ -144,6 +144,20 @@ export default function Home() {
   const [form, setForm] = useState({ name: "", phone: "", email: "", type: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   function handleContact(e: React.FormEvent) {
     e.preventDefault();
     setSubmitted(true);
@@ -210,21 +224,21 @@ export default function Home() {
           <div className="container hero__inner">
             <div className="hero__copy">
               <div className="hero__pill">🤝 Independent Broker · No Extra Cost to You</div>
-              <h1 className="hero__h1">
+              <h1 className="hero__h1 reveal">
                 Health Insurance<br />
                 <span className="hero__h1-grad">Made Personal.</span>
               </h1>
-              <p className="hero__sub">
+              <p className="hero__sub reveal reveal--delay-1">
                 Hey, I&apos;m Daniel — a licensed independent health insurance broker.
                 I work with self-employed professionals, business owners, and families
                 to find coverage that actually makes sense. I shop every major carrier
                 so <strong>you</strong> don&apos;t have to.
               </p>
-              <div className="hero__actions">
+              <div className="hero__actions reveal reveal--delay-2">
                 <a href="#contact" className="btn btn--primary btn--lg">Get My Free Quote</a>
                 <a href="#about" className="btn btn--outline-light btn--lg">Learn More About Me</a>
               </div>
-              <div className="hero__proof">
+              <div className="hero__proof reveal reveal--delay-3">
                 <div className="hero__proof-item">
                   <strong>200+</strong><span>Plans Compared</span>
                 </div>
@@ -240,7 +254,7 @@ export default function Home() {
             </div>
 
             {/* Lead intake card */}
-            <div className="lead-card">
+            <div className="lead-card reveal reveal--delay-4">
               <div className="lead-card__head">
                 <div className="lead-card__avatar">D</div>
                 <div>
@@ -300,7 +314,7 @@ export default function Home() {
         {/* ══ ABOUT ══ */}
         <section className="about" id="about">
           <div className="container about__inner">
-            <div className="about__photo">
+            <div className="about__photo reveal">
               <div className="about__photo-frame">
                 <div className="about__photo-placeholder">
                   <span className="about__photo-initial">D</span>
@@ -315,7 +329,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="about__copy">
+            <div className="about__copy reveal reveal--delay-1">
               <p className="section-eye">A Little About Me</p>
               <h2 className="section-h2">I&apos;m Daniel — your broker,<br />your advocate.</h2>
               <p>
@@ -368,8 +382,8 @@ export default function Home() {
               </p>
             </div>
             <div className="services__grid">
-              {SERVICES.map((s) => (
-                <div key={s.title} className="service-card">
+              {SERVICES.map((s, i) => (
+                <div key={s.title} className={`service-card reveal reveal--delay-${(i % 4) + 1}`}>
                   <div className="service-card__icon">{s.icon}</div>
                   <h3 className="service-card__title">{s.title}</h3>
                   <p className="service-card__desc">{s.desc}</p>
@@ -390,7 +404,7 @@ export default function Home() {
 
         {/* ══ SOCIAL PROOF BAND ══ */}
         <section className="proof-band">
-          <div className="container proof-band__inner">
+          <div className="container proof-band__inner reveal">
             <div className="proof-band__stat">
               <strong>$300+</strong>
               <span>avg monthly savings per client</span>
@@ -424,8 +438,8 @@ export default function Home() {
               </p>
             </div>
             <div className="reviews__grid">
-              {REVIEWS.map((r) => (
-                <div key={r.name} className="review-card">
+              {REVIEWS.map((r, i) => (
+                <div key={r.name} className={`review-card reveal reveal--delay-${(i % 3) + 1}`}>
                   <Stars count={r.stars} />
                   <blockquote className="review-card__text">
                     {r.text}
@@ -445,7 +459,7 @@ export default function Home() {
 
         {/* ══ FAQ ══ */}
         <section className="faq" id="faq">
-          <div className="container faq__inner">
+          <div className="container faq__inner reveal">
             <div className="section-header">
               <p className="section-eye">FAQ</p>
               <h2 className="section-h2">Questions I get a lot</h2>
@@ -477,7 +491,7 @@ export default function Home() {
         {/* ══ CONTACT ══ */}
         <section className="contact" id="contact">
           <div className="container contact__inner">
-            <div className="contact__copy">
+            <div className="contact__copy reveal">
               <p className="section-eye section-eye--light">Get in Touch</p>
               <h2 className="section-h2 section-h2--light">
                 Let&apos;s find your<br />perfect plan.
@@ -501,7 +515,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="contact__form-wrap">
+            <div className="contact__form-wrap reveal reveal--delay-1">
               {submitted ? (
                 <div className="contact__success">
                   <div className="contact__success-icon">🎉</div>
