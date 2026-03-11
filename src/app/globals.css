@@ -519,6 +519,7 @@ svg {
   justify-content: center;
   height: 80px;
   box-shadow: var(--s-sm);
+  flex-shrink: 0;
 }
 
 .carrier-logo-wrapper {
