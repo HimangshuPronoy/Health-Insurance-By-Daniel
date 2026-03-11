@@ -1,14 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 /* ── NAV ── */
 const NAV_LINKS = [
-  { label: "Home",      href: "#home" },
-  { label: "About",     href: "#about" },
-  { label: "Services",  href: "#services" },
-  { label: "Reviews",   href: "#reviews" },
-  { label: "FAQ",       href: "#faq" },
-  { label: "Contact",   href: "#contact" },
+  { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
+  { label: "Services", href: "#services" },
+  { label: "Reviews", href: "#reviews" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Contact", href: "#contact" },
 ];
 
 /* ── CARRIERS ── */
@@ -29,7 +30,12 @@ const SERVICES = [
     icon: "🏥",
     title: "Health Insurance",
     desc: "I\u2019ll dig into your situation — your doctors, your meds, your budget — and find the plan that actually fits. Not just the cheapest option.",
-    items: ["Individual & Family Plans", "Self-Employed Coverage", "HSA-Compatible Plans", "Short-Term Options"],
+    items: [
+      "Individual & Family Plans",
+      "Self-Employed Coverage",
+      "HSA-Compatible Plans",
+      "Short-Term Options",
+    ],
   },
   {
     icon: "👁️",
@@ -41,13 +47,23 @@ const SERVICES = [
     icon: "🦷",
     title: "Dental",
     desc: "From routine cleanings to major work, I\u2019ll find a plan that covers your dentist and won\u2019t surprise you with hidden costs.",
-    items: ["Preventive Care", "Basic & Major Restorative", "Orthodontics", "Implant Coverage"],
+    items: [
+      "Preventive Care",
+      "Basic & Major Restorative",
+      "Orthodontics",
+      "Implant Coverage",
+    ],
   },
   {
     icon: "🛡️",
     title: "Supplemental",
     desc: "Your main plan can\u2019t cover everything. I help fill the gaps so you\u2019re protected when life throws a curveball.",
-    items: ["Critical Illness", "Accident Insurance", "Hospital Indemnity", "Life Insurance"],
+    items: [
+      "Critical Illness",
+      "Accident Insurance",
+      "Hospital Indemnity",
+      "Life Insurance",
+    ],
   },
 ];
 
@@ -141,42 +157,77 @@ function Stars({ count }: { count: number }) {
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [form, setForm] = useState({ name: "", phone: "", email: "", type: "", message: "" });
+  const [leadForm, setLeadForm] = useState({ name: "", phone: "", type: "" });
+  const [contactForm, setContactForm] = useState({
+    first: "",
+    last: "",
+    phone: "",
+    type: "",
+    message: "",
+  });
   const [submitted, setSubmitted] = useState(false);
+  const [leadSubmitted, setLeadSubmitted] = useState(false);
+
+  const DANIEL_PHONE = "+17736476575";
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-        }
-      });
-    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
+    );
 
     document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
   }, []);
 
-  function handleContact(e: React.FormEvent) {
+  function handleLeadSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const body = `New lead from website:%0A- Name: ${leadForm.name}%0A- Phone: ${leadForm.phone}%0A- Looking for: ${leadForm.type || "Not specified"}`;
+    window.open(`sms:${DANIEL_PHONE}?&body=${body}`, "_self");
+    setLeadSubmitted(true);
+  }
+
+  function handleContactSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const body = `New inquiry from website:%0A- Name: ${contactForm.first} ${contactForm.last}%0A- Phone: ${contactForm.phone || "Not provided"}%0A- Looking for: ${contactForm.type || "Not specified"}%0A- Message: ${contactForm.message || "None"}`;
+    window.open(`sms:${DANIEL_PHONE}?&body=${body}`, "_self");
     setSubmitted(true);
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  function handleLeadChange(
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) {
+    setLeadForm({ ...leadForm, [e.target.name]: e.target.value });
+  }
+
+  function handleContactChange(
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) {
+    setContactForm({ ...contactForm, [e.target.name]: e.target.value });
   }
 
   return (
     <div className="site">
-
       {/* ══ TOP BAR ══ */}
       <div className="topbar" id="home">
         <div className="container topbar__inner">
           <span>Licensed Independent Broker · Serving All 50 States</span>
-          <a href="tel:+13235550192" className="topbar__phone">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.56 21 3 13.44 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z" /></svg>
-            (323) 555-0192
+          <a href="tel:+17736476575" className="topbar__phone">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.56 21 3 13.44 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z" />
+            </svg>
+            (773) 647-6575
           </a>
         </div>
       </div>
@@ -185,7 +236,6 @@ export default function Home() {
       <header className="header">
         <div className="container header__inner">
           <a href="#home" className="brand">
-            <span className="brand__icon">D</span>
             <div>
               <span className="brand__name">Health Insurance</span>
               <span className="brand__by">by Daniel</span>
@@ -194,26 +244,62 @@ export default function Home() {
 
           <nav className="nav desktop-nav">
             {NAV_LINKS.map((l) => (
-              <a key={l.href} href={l.href} className="nav__link">{l.label}</a>
+              <a key={l.href} href={l.href} className="nav__link">
+                {l.label}
+              </a>
             ))}
           </nav>
 
-          <a href="#contact" className="btn btn--primary header__cta">Let&apos;s Talk</a>
+          <a href="#contact" className="btn btn--primary header__cta">
+            Let&apos;s Talk
+          </a>
 
-          <button className="burger" aria-label="Toggle menu" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen
-              ? <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg>
-              : <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" /></svg>
-            }
+          <button
+            className="burger"
+            aria-label="Toggle menu"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? (
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+              </svg>
+            ) : (
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+              </svg>
+            )}
           </button>
         </div>
 
         {menuOpen && (
           <nav className="mobile-nav">
             {NAV_LINKS.map((l) => (
-              <a key={l.href} href={l.href} className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{l.label}</a>
+              <a
+                key={l.href}
+                href={l.href}
+                className="mobile-nav__link"
+                onClick={() => setMenuOpen(false)}
+              >
+                {l.label}
+              </a>
             ))}
-            <a href="#contact" className="btn btn--primary mobile-nav__cta" onClick={() => setMenuOpen(false)}>Let&apos;s Talk</a>
+            <a
+              href="#contact"
+              className="btn btn--primary mobile-nav__cta"
+              onClick={() => setMenuOpen(false)}
+            >
+              Let&apos;s Talk
+            </a>
           </nav>
         )}
       </header>
@@ -223,32 +309,43 @@ export default function Home() {
         <section className="hero">
           <div className="container hero__inner">
             <div className="hero__copy">
-              <div className="hero__pill">🤝 Independent Broker · No Extra Cost to You</div>
+              <div className="hero__pill">
+                🤝 Independent Broker · No Extra Cost to You
+              </div>
               <h1 className="hero__h1 reveal">
-                Health Insurance<br />
+                Health Insurance
+                <br />
                 <span className="hero__h1-grad">Made Personal.</span>
               </h1>
               <p className="hero__sub reveal reveal--delay-1">
-                Hey, I&apos;m Daniel — a licensed independent health insurance broker.
-                I work with self-employed professionals, business owners, and families
-                to find coverage that actually makes sense. I shop every major carrier
-                so <strong>you</strong> don&apos;t have to.
+                Hey, I&apos;m Daniel — a licensed independent health insurance
+                broker. I work with self-employed professionals, business
+                owners, and families to find coverage that actually makes sense.
+                I shop every major carrier so <strong>you</strong> don&apos;t
+                have to.
               </p>
               <div className="hero__actions reveal reveal--delay-2">
-                <a href="#contact" className="btn btn--primary btn--lg">Get My Free Quote</a>
-                <a href="#about" className="btn btn--outline-light btn--lg">Learn More About Me</a>
+                <a href="#contact" className="btn btn--primary btn--lg">
+                  Get My Free Quote
+                </a>
+                <a href="#about" className="btn btn--outline-light btn--lg">
+                  Learn More About Me
+                </a>
               </div>
               <div className="hero__proof reveal reveal--delay-3">
                 <div className="hero__proof-item">
-                  <strong>200+</strong><span>Plans Compared</span>
+                  <strong>200+</strong>
+                  <span>Plans Compared</span>
                 </div>
                 <div className="hero__proof-divider" />
                 <div className="hero__proof-item">
-                  <strong>100%</strong><span>Free Service</span>
+                  <strong>100%</strong>
+                  <span>Free Service</span>
                 </div>
                 <div className="hero__proof-divider" />
                 <div className="hero__proof-item">
-                  <strong>All 50</strong><span>States Licensed</span>
+                  <strong>All 50</strong>
+                  <span>States Licensed</span>
                 </div>
               </div>
             </div>
@@ -256,36 +353,78 @@ export default function Home() {
             {/* Lead intake card */}
             <div className="lead-card reveal reveal--delay-4">
               <div className="lead-card__head">
-                <div className="lead-card__avatar">D</div>
+                <Image src="/daniel.png" alt="Daniel" width={64} height={64} className="lead-card__avatar object-cover aspect-square" style={{ borderRadius: '50%', objectPosition: 'center top' }} />
                 <div>
                   <p className="lead-card__hi">Hey there 👋 I&apos;m Daniel</p>
-                  <p className="lead-card__tagline">Let me find your perfect plan</p>
+                  <p className="lead-card__tagline">
+                    Let me find your perfect plan
+                  </p>
                 </div>
               </div>
-              <form className="lead-form" onSubmit={handleContact}>
-                <div className="lead-form__group">
-                  <label htmlFor="lf-name">Your Name</label>
-                  <input id="lf-name" name="name" type="text" placeholder="First & Last Name" required onChange={handleChange} />
+              {leadSubmitted ? (
+                <div
+                  className="contact__success"
+                  style={{ padding: "2rem", textAlign: "center" }}
+                >
+                  <div className="contact__success-icon">🎉</div>
+                  <h3>Got it — I&apos;ll be in touch soon!</h3>
+                  <p>
+                    Thanks for reaching out. I usually get back within a few
+                    hours.
+                  </p>
                 </div>
-                <div className="lead-form__group">
-                  <label htmlFor="lf-phone">Phone</label>
-                  <input id="lf-phone" name="phone" type="tel" placeholder="(555) 000-0000" required onChange={handleChange} />
-                </div>
-                <div className="lead-form__group">
-                  <label htmlFor="lf-type">What are you looking for?</label>
-                  <select id="lf-type" name="type" onChange={handleChange} defaultValue="">
-                    <option value="" disabled>Pick one…</option>
-                    <option>Health Insurance</option>
-                    <option>Health + Dental + Vision</option>
-                    <option>Supplemental / Gap Coverage</option>
-                    <option>Not sure yet — help me figure it out</option>
-                  </select>
-                </div>
-                <button type="submit" className="btn btn--primary lead-form__submit">
-                  Get My Free Quote →
-                </button>
-                <p className="lead-form__note">No spam, ever. I&apos;ll personally reach out within 24 hrs.</p>
-              </form>
+              ) : (
+                <form className="lead-form" onSubmit={handleLeadSubmit}>
+                  <div className="lead-form__group">
+                    <label htmlFor="lf-name">Your Name</label>
+                    <input
+                      id="lf-name"
+                      name="name"
+                      type="text"
+                      placeholder="First & Last Name"
+                      required
+                      onChange={handleLeadChange}
+                    />
+                  </div>
+                  <div className="lead-form__group">
+                    <label htmlFor="lf-phone">Phone</label>
+                    <input
+                      id="lf-phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="(555) 000-0000"
+                      required
+                      onChange={handleLeadChange}
+                    />
+                  </div>
+                  <div className="lead-form__group">
+                    <label htmlFor="lf-type">What are you looking for?</label>
+                    <select
+                      id="lf-type"
+                      name="type"
+                      onChange={handleLeadChange}
+                      defaultValue=""
+                    >
+                      <option value="" disabled>
+                        Pick one…
+                      </option>
+                      <option>Health Insurance</option>
+                      <option>Health + Dental + Vision</option>
+                      <option>Supplemental / Gap Coverage</option>
+                      <option>Not sure yet — help me figure it out</option>
+                    </select>
+                  </div>
+                  <button
+                    type="submit"
+                    className="btn btn--primary lead-form__submit"
+                  >
+                    Get My Free Quote →
+                  </button>
+                  <p className="lead-form__note">
+                    No spam, ever. I&apos;ll personally reach out within 24 hrs.
+                  </p>
+                </form>
+              )}
             </div>
           </div>
 
@@ -299,13 +438,17 @@ export default function Home() {
         {/* ══ CARRIERS ══ */}
         <section className="carriers">
           <div className="container">
-            <p className="carriers__label">Carriers I personally compare for you</p>
+            <p className="carriers__label">
+              Carriers I personally compare for you
+            </p>
           </div>
           <div className="carriers__marquee">
             <div className="carriers__track">
               {/* Render lists multiple times to ensure seamless infinite scroll on wide screens */}
               {[...CARRIERS, ...CARRIERS, ...CARRIERS].map((c, i) => (
-                <div key={`${c}-${i}`} className="carrier-chip">{c}</div>
+                <div key={`${c}-${i}`} className="carrier-chip">
+                  {c}
+                </div>
               ))}
             </div>
           </div>
@@ -314,11 +457,9 @@ export default function Home() {
         {/* ══ ABOUT ══ */}
         <section className="about" id="about">
           <div className="container about__inner">
-            <div className="about__photo reveal">
+            <div className="about__photo">
               <div className="about__photo-frame">
-                <div className="about__photo-placeholder">
-                  <span className="about__photo-initial">D</span>
-                </div>
+                <Image src="/daniel.png" alt="Daniel" fill className="object-cover" style={{ objectPosition: 'center top' }} />
               </div>
               <div className="about__card-float">
                 <div className="about__card-float-icon">⭐</div>
@@ -331,21 +472,28 @@ export default function Home() {
 
             <div className="about__copy reveal reveal--delay-1">
               <p className="section-eye">A Little About Me</p>
-              <h2 className="section-h2">I&apos;m Daniel — your broker,<br />your advocate.</h2>
+              <h2 className="section-h2">
+                I&apos;m Daniel — your broker,
+                <br />
+                your advocate.
+              </h2>
               <p>
-                I got into health insurance because I watched too many people in my
-                circle — talented freelancers, small business owners, real families —
-                overpaying for coverage they didn&apos;t fully understand. That didn&apos;t sit right with me.
+                I got into health insurance because I watched too many people in
+                my circle — talented freelancers, small business owners, real
+                families — overpaying for coverage they didn&apos;t fully
+                understand. That didn&apos;t sit right with me.
               </p>
               <p>
-                As an independent broker, I&apos;m not tied to any single carrier. That means I work
-                <em> for you</em>, not for Kaiser or UnitedHealthcare. My job is to find the plan
-                that fits your doctors, your prescriptions, and your budget.
+                As an independent broker, I&apos;m not tied to any single
+                carrier. That means I work
+                <em> for you</em>, not for Kaiser or UnitedHealthcare. My job is
+                to find the plan that fits your doctors, your prescriptions, and
+                your budget.
               </p>
               <p>
-                Whether you&apos;re newly self-employed, growing a family, or just tired
-                of paying too much — I make this whole process simple, transparent,
-                and honestly kind of painless.
+                Whether you&apos;re newly self-employed, growing a family, or
+                just tired of paying too much — I make this whole process
+                simple, transparent, and honestly kind of painless.
               </p>
               <div className="about__highlights">
                 <div className="about__hl">
@@ -361,11 +509,13 @@ export default function Home() {
                   Always free to you
                 </div>
                 <div className="about__hl">
-                  <span className="about__hl-icon">✓</span>
-                  I stick with you after enrollment
+                  <span className="about__hl-icon">✓</span>I stick with you
+                  after enrollment
                 </div>
               </div>
-              <a href="#contact" className="btn btn--primary btn--lg">Book a Free Call with Me</a>
+              <a href="#contact" className="btn btn--primary btn--lg">
+                Book a Free Call with Me
+              </a>
             </div>
           </div>
         </section>
@@ -377,25 +527,37 @@ export default function Home() {
               <p className="section-eye">What I Can Help With</p>
               <h2 className="section-h2">One call with me covers everything</h2>
               <p className="section-sub">
-                Health, dental, vision, supplemental — I handle it all so you don&apos;t
-                have to talk to five different people.
+                Health, dental, vision, supplemental — I handle it all so you
+                don&apos;t have to talk to five different people.
               </p>
             </div>
             <div className="services__grid">
               {SERVICES.map((s, i) => (
-                <div key={s.title} className={`service-card reveal reveal--delay-${(i % 4) + 1}`}>
+                <div
+                  key={s.title}
+                  className={`service-card reveal reveal--delay-${(i % 4) + 1}`}
+                >
                   <div className="service-card__icon">{s.icon}</div>
                   <h3 className="service-card__title">{s.title}</h3>
                   <p className="service-card__desc">{s.desc}</p>
                   <ul className="service-card__list">
                     {s.items.map((item) => (
                       <li key={item}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#10b981"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /></svg>
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="#10b981"
+                        >
+                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                        </svg>
                         {item}
                       </li>
                     ))}
                   </ul>
-                  <a href="#contact" className="service-card__cta">Talk to Me About This →</a>
+                  <a href="#contact" className="service-card__cta">
+                    Talk to Me About This →
+                  </a>
                 </div>
               ))}
             </div>
@@ -434,12 +596,16 @@ export default function Home() {
               <p className="section-eye">What People Are Saying</p>
               <h2 className="section-h2">Real people. Real results.</h2>
               <p className="section-sub">
-                Don&apos;t just take my word for it — here&apos;s what my clients have to say.
+                Don&apos;t just take my word for it — here&apos;s what my
+                clients have to say.
               </p>
             </div>
             <div className="reviews__grid">
               {REVIEWS.map((r, i) => (
-                <div key={r.name} className={`review-card reveal reveal--delay-${(i % 3) + 1}`}>
+                <div
+                  key={r.name}
+                  className={`review-card reveal reveal--delay-${(i % 3) + 1}`}
+                >
                   <Stars count={r.stars} />
                   <blockquote className="review-card__text">
                     {r.text}
@@ -463,7 +629,9 @@ export default function Home() {
             <div className="section-header">
               <p className="section-eye">FAQ</p>
               <h2 className="section-h2">Questions I get a lot</h2>
-              <p className="section-sub">Everything you need to know before we chat.</p>
+              <p className="section-sub">
+                Everything you need to know before we chat.
+              </p>
             </div>
             <div className="faq__list">
               {FAQS.map((item, i) => (
@@ -477,7 +645,13 @@ export default function Home() {
                     aria-expanded={openFaq === i}
                   >
                     <span>{item.q}</span>
-                    <svg className="faq__chevron" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <svg
+                      className="faq__chevron"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
                       <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
                     </svg>
                   </button>
@@ -494,23 +668,77 @@ export default function Home() {
             <div className="contact__copy reveal">
               <p className="section-eye section-eye--light">Get in Touch</p>
               <h2 className="section-h2 section-h2--light">
-                Let&apos;s find your<br />perfect plan.
+                Let&apos;s find your
+                <br />
+                perfect plan.
               </h2>
               <p className="contact__sub">
-                Fill out the form and I&apos;ll personally reach out within 24 hours.
-                No pressure, no obligation — just a real conversation about what&apos;s
-                best for you. Rather talk now?
+                Fill out the form and I&apos;ll personally reach out within 24
+                hours. No pressure, no obligation — just a real conversation
+                about what&apos;s best for you. Rather talk now?
               </p>
-              <a href="tel:+13235550192" className="contact__phone-link">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.56 21 3 13.44 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z" /></svg>
-                (323) 555-0192
+              <a href="tel:+17736476575" className="contact__phone-link">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.56 21 3 13.44 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z" />
+                </svg>
+                (773) 647-6575
               </a>
               <div className="contact__socials">
-                <a href="#" className="contact__social-btn" aria-label="Facebook">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" /></svg>
+                <a
+                  href="https://www.facebook.com/profile.php?id=61569362900902"
+                  className="contact__social-btn"
+                  aria-label="Facebook"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+                  </svg>
                 </a>
-                <a href="#" className="contact__social-btn" aria-label="Instagram">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" strokeWidth="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="2"/><circle cx="17.5" cy="6.5" r="1" /></svg>
+                <a
+                  href="https://www.instagram.com/healthinsurancebydaniel"
+                  className="contact__social-btn"
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <rect
+                      x="2"
+                      y="2"
+                      width="20"
+                      height="20"
+                      rx="5"
+                      ry="5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <circle cx="17.5" cy="6.5" r="1" />
+                  </svg>
                 </a>
               </div>
             </div>
@@ -521,34 +749,54 @@ export default function Home() {
                   <div className="contact__success-icon">🎉</div>
                   <h3>Got it — I&apos;ll be in touch soon!</h3>
                   <p>
-                    Thanks for reaching out. I usually get back to people within a
-                    few hours. Looking forward to chatting!
+                    Thanks for reaching out. I usually get back to people within
+                    a few hours. Looking forward to chatting!
                   </p>
                 </div>
               ) : (
-                <form className="contact__form" onSubmit={handleContact}>
+                <form className="contact__form" onSubmit={handleContactSubmit}>
                   <div className="form-row">
                     <div className="form-group">
                       <label>First Name</label>
-                      <input name="first" type="text" placeholder="John" required onChange={handleChange} />
+                      <input
+                        name="first"
+                        type="text"
+                        placeholder="John"
+                        required
+                        onChange={handleContactChange}
+                      />
                     </div>
                     <div className="form-group">
                       <label>Last Name</label>
-                      <input name="last" type="text" placeholder="Smith" required onChange={handleChange} />
+                      <input
+                        name="last"
+                        type="text"
+                        placeholder="Smith"
+                        required
+                        onChange={handleContactChange}
+                      />
                     </div>
                   </div>
                   <div className="form-group">
-                    <label>Email</label>
-                    <input name="email" type="email" placeholder="john@email.com" required onChange={handleChange} />
-                  </div>
-                  <div className="form-group">
                     <label>Phone</label>
-                    <input name="phone" type="tel" placeholder="(555) 000-0000" onChange={handleChange} />
+                    <input
+                      name="phone"
+                      type="tel"
+                      placeholder="(555) 000-0000"
+                      required
+                      onChange={handleContactChange}
+                    />
                   </div>
                   <div className="form-group">
                     <label>What are you looking for?</label>
-                    <select name="type" onChange={handleChange} defaultValue="">
-                      <option value="" disabled>Pick one…</option>
+                    <select
+                      name="type"
+                      onChange={handleContactChange}
+                      defaultValue=""
+                    >
+                      <option value="" disabled>
+                        Pick one…
+                      </option>
                       <option>Health Insurance</option>
                       <option>Health + Dental + Vision</option>
                       <option>Supplemental / Gap Coverage</option>
@@ -557,12 +805,22 @@ export default function Home() {
                   </div>
                   <div className="form-group">
                     <label>Anything else? (optional)</label>
-                    <textarea name="message" rows={3} placeholder="Tell me a bit about your situation…" onChange={handleChange} />
+                    <textarea
+                      name="message"
+                      rows={3}
+                      placeholder="Tell me a bit about your situation…"
+                      onChange={handleContactChange}
+                    />
                   </div>
-                  <button type="submit" className="btn btn--primary form-submit">
+                  <button
+                    type="submit"
+                    className="btn btn--primary form-submit"
+                  >
                     Send It Over →
                   </button>
-                  <p className="form-note">100% free · No obligation · No spam</p>
+                  <p className="form-note">
+                    100% free · No obligation · No spam
+                  </p>
                 </form>
               )}
             </div>
@@ -575,7 +833,14 @@ export default function Home() {
         <div className="container footer__inner">
           <div className="footer__brand">
             <a href="#home" className="brand brand--light">
-              <span className="brand__icon">D</span>
+              <Image
+                src="/daniel.png"
+                alt="Daniel"
+                className="brand__icon object-cover aspect-square"
+                style={{ borderRadius: "50%", objectPosition: "center top" }}
+                width={44}
+                height={44}
+              />
               <div>
                 <span className="brand__name">Health Insurance</span>
                 <span className="brand__by">by Daniel</span>
@@ -591,7 +856,9 @@ export default function Home() {
             <div className="footer-col">
               <h4>Pages</h4>
               {NAV_LINKS.map((l) => (
-                <a key={l.href} href={l.href}>{l.label}</a>
+                <a key={l.href} href={l.href}>
+                  {l.label}
+                </a>
               ))}
             </div>
             <div className="footer-col">
@@ -603,15 +870,31 @@ export default function Home() {
             </div>
             <div className="footer-col">
               <h4>Reach Me</h4>
-              <a href="tel:+13235550192">(323) 555-0192</a>
-              <a href="mailto:daniel@healthinsurancebydaniel.com">daniel@healthinsurance<br />bydaniel.com</a>
+              <a href="tel:+17736476575">(773) 647-6575</a>
+              <a
+                href="https://www.instagram.com/healthinsurancebydaniel"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Instagram
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61569362900902"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Facebook
+              </a>
               <span>Available 7 days a week</span>
             </div>
           </div>
         </div>
 
         <div className="container footer__bottom">
-          <p>© {new Date().getFullYear()} Health Insurance by Daniel. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} Health Insurance by Daniel. All rights
+            reserved.
+          </p>
           <div className="footer__legal">
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Use</a>
