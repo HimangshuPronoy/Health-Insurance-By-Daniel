@@ -513,12 +513,18 @@ svg {
   background: #fff;
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
-  padding: 0.35rem 1rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  white-space: nowrap;
+  padding: 0.5rem 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
   box-shadow: var(--s-sm);
+}
+
+.carrier-logo-wrapper {
+  position: relative;
+  width: 140px;
+  height: 50px;
 }
 
 /* ─── Section headers ─── */

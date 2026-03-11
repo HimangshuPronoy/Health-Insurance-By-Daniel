@@ -14,14 +14,12 @@ const NAV_LINKS = [
 
 /* ── CARRIERS ── */
 const CARRIERS = [
-  "Kaiser Permanente",
-  "UnitedHealthcare",
-  "Blue Cross Blue Shield",
-  "Cigna",
-  "Aetna",
-  "Humana",
-  "Molina Healthcare",
-  "Oscar Health",
+  { name: "Kaiser Permanente", src: "/logos/kaiser.png" },
+  { name: "Molina Healthcare", src: "/logos/molina.png" },
+  { name: "Blue Cross Blue Shield", src: "/logos/bluecross.png" },
+  { name: "UnitedHealthcare", src: "/logos/united.png" },
+  { name: "Aetna", src: "/logos/aetna.png" },
+  { name: "Cigna", src: "/logos/cigna.png" },
 ];
 
 /* ── SERVICES ── */
@@ -446,8 +444,10 @@ export default function Home() {
             <div className="carriers__track">
               {/* Render lists multiple times to ensure seamless infinite scroll on wide screens */}
               {[...CARRIERS, ...CARRIERS, ...CARRIERS].map((c, i) => (
-                <div key={`${c}-${i}`} className="carrier-chip">
-                  {c}
+                <div key={`${c.name}-${i}`} className="carrier-chip">
+                  <div className="carrier-logo-wrapper">
+                    <Image src={c.src} alt={c.name} fill style={{ objectFit: 'contain' }} />
+                  </div>
                 </div>
               ))}
             </div>
