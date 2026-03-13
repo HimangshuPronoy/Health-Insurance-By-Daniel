@@ -174,7 +174,7 @@ const ZIP_STATE_MAP: Record<string, string> = {
   WY: "82000-83499",
 };
 
-const QUOTE_DATA: Record<string, Record<string, any>> = {
+const QUOTE_DATA: Record<string, Record<string, string | number>> = {
   "M 18-23": { default: "177-269", KS: "147-259", MD: "113-175", NV: "157-259", OH: "160-249", WI: "160-249", WV: "160-249", WY: "160-249", UT: "147-259" },
   "F 18-23": { default: "225-314", KS: "195-289", MD: "135-210", NV: "185-289", UT: "215-295" },
   "M 24-29": { default: "188-295", KS: "147-259", MD: "120-200", NV: "167-286", OH: "167-286", UT: "167-286" },
@@ -216,8 +216,13 @@ function calculateRate(age: number, gender: string, state: string) {
   const key = `${gender === "male" ? "M" : "F"} ${ageRange}`;
   const rateObj = QUOTE_DATA[key];
   if (!rateObj) return null;
-  const rateStr = rateObj[state] || rateObj.default;
-  const [min, max] = rateStr.split("-").map(Number);
+  
+  const rateVal = rateObj[state] || rateObj.default;
+  if (typeof rateVal === "number") {
+    return { min: rateVal, max: rateVal };
+  }
+  
+  const [min, max] = rateVal.split("-").map(Number);
   return { min, max };
 }
 
@@ -268,7 +273,7 @@ function QuoteSection() {
 
   const handlePersonChange = (index: number, key: 'age' | 'gender', value: string) => {
     const newPersons = [...persons];
-    (newPersons[index] as any)[key] = value;
+    newPersons[index] = { ...newPersons[index], [key]: value };
     setPersons(newPersons);
   };
 
@@ -297,7 +302,8 @@ function QuoteSection() {
     }
 
     if (children > 0) {
-      const childRate = QUOTE_DATA["Child +"][state] || QUOTE_DATA["Child +"].default;
+      const childRateVal = QUOTE_DATA["Child +"][state] || QUOTE_DATA["Child +"].default;
+      const childRate = typeof childRateVal === "number" ? childRateVal : Number(childRateVal);
       minTotal += childRate * children;
       maxTotal += childRate * children;
     }
