@@ -140,6 +140,103 @@ const FAQS = [
 ];
 
 /* ── HELPERS ── */
+const ZIP_STATE_MAP: Record<string, string> = {
+  AL: "35004-36925",
+  AR: "71601-72959",
+  CO: "80001-81658",
+  DE: "19701-19980",
+  FL: "32003-34997",
+  GA: "30002-39901",
+  IL: "60001-62999",
+  IN: "46001-47997",
+  IA: "50001-52809",
+  KS: "66002-67954",
+  KY: "40003-42788",
+  LA: "70001-71497",
+  MD: "20588-21930",
+  MI: "48001-49971",
+  MS: "38600-39799",
+  MO: "63000-65899",
+  MT: "59000-59999",
+  NE: "68000-69399",
+  NV: "89000-89899",
+  NC: "27000-28999",
+  OH: "43000-45899",
+  OK: "73000-74999",
+  SC: "29000-29999",
+  SD: "57000-57799",
+  TN: "37000-38599",
+  TX: "73300,75000-79999",
+  UT: "84000-84799",
+  VA: "20100,22000-24699",
+  WI: "53000-54999",
+  WV: "24700-26899",
+  WY: "82000-83499",
+};
+
+const QUOTE_DATA: Record<string, Record<string, any>> = {
+  "M 18-23": { default: "177-269", KS: "147-259", MD: "113-175", NV: "157-259", OH: "160-249", WI: "160-249", WV: "160-249", WY: "160-249", UT: "147-259" },
+  "F 18-23": { default: "225-314", KS: "195-289", MD: "135-210", NV: "185-289", UT: "215-295" },
+  "M 24-29": { default: "188-295", KS: "147-259", MD: "120-200", NV: "167-286", OH: "167-286", UT: "167-286" },
+  "F 24-29": { default: "240-365", CO: "220-349", IL: "228-359", IN: "228-359", IA: "220-349", KS: "210-319", MD: "165-285", NV: "211-319", OH: "211-319", UT: "211-319" },
+  "M 30-37": { default: "231-378", IN: "220-355", KS: "197-335", MD: "140-250", NV: "197-335", OH: "221-358", SD: "221-358", UT: "197-335" },
+  "F 30-37": { default: "279-429", CO: "250-412", IL: "260-390", IA: "242-380", KS: "242-412", MD: "190-310", NV: "240-389", OH: "260-387", SD: "250-399", UT: "230-380" },
+  "M 38-42": { default: "250-392", GA: "240-365", CO: "250-375", IL: "250-375", IN: "240-365", KS: "210-365", MD: "195-289", MS: "250-375", NE: "250-375", NV: "210-365", NC: "250-375", OH: "240-355", TN: "210-365", UT: "210-365" },
+  "F 38-42": { default: "302-465", CO: "302-462", IN: "280-425", KS: "280-425", MD: "200-345", NV: "280-422", OH: "300-439", UT: "280-422" },
+  "M 43-47": { default: "292-397", MD: "215-310" },
+  "F 43-47": { default: "312-474", IL: "302-455", IN: "302-455", IA: "302-455", KS: "302-455", KY: "302-455", LA: "302-455", MD: "225-345", NV: "302-455", OH: "302-455", UT: "292-455" },
+  "M 48-52": { default: "375-500", CO: "340-500", MD: "250-350", OK: "340-500" },
+  "F 48-52": { default: "365-530", MD: "350-455", UT: "365-500", WI: "365-500", WV: "365-500", WY: "365-500" },
+  "M 53-56": { default: "430-575", CO: "350-575", GA: "440-585", KY: "400-575", MD: "300-415", OK: "440-585", SC: "440-585" },
+  "F 53-56": { default: "405-550", CO: "395-550", KS: "385-550", LA: "395-550", MD: "332-439", SD: "375-550", TN: "385-550", UT: "394-550" },
+  "M 57-60": { default: "495-730", IL: "495-650", IN: "480-575", IA: "480-575", KS: "495-650", KY: "495-650", LA: "495-650", MD: "455-650", MI: "495-650", MS: "495-650", MO: "495-650", MT: "495-650", NE: "495-650", NV: "495-650", NC: "495-650", OH: "495-650", OK: "495-650", SC: "425-650" },
+  "F 57-60": { default: "440-585", CO: "375-585", IL: "400-575", IA: "400-575", MD: "350-455", NV: "400-575", OK: "400-575", UT: "390-575" },
+  "M 61-64": { default: "514-761", CO: "495-725", FL: "514-788", IN: "504-698", KS: "495-730", MD: "385-580", NV: "495-699", SC: "514-678", UT: "475-650", WV: "514-678" },
+  "F 61-64": { default: "485-650", CO: "405-650", MD: "385-550", MI: "400-545", SC: "425-650", UT: "405-620" },
+  "Child +": { default: 115, CO: 100, IN: 100, MD: 80 },
+};
+
+function getAgeRange(age: number) {
+  if (age < 18) return null;
+  if (age <= 23) return "18-23";
+  if (age <= 29) return "24-29";
+  if (age <= 37) return "30-37";
+  if (age <= 42) return "38-42";
+  if (age <= 47) return "43-47";
+  if (age <= 52) return "48-52";
+  if (age <= 56) return "53-56";
+  if (age <= 60) return "57-60";
+  if (age <= 64) return "61-64";
+  return null;
+}
+
+function calculateRate(age: number, gender: string, state: string) {
+  const ageRange = getAgeRange(age);
+  if (!ageRange) return null;
+  const key = `${gender === "male" ? "M" : "F"} ${ageRange}`;
+  const rateObj = QUOTE_DATA[key];
+  if (!rateObj) return null;
+  const rateStr = rateObj[state] || rateObj.default;
+  const [min, max] = rateStr.split("-").map(Number);
+  return { min, max };
+}
+
+function getStateFromZip(zip: string) {
+  for (const [state, range] of Object.entries(ZIP_STATE_MAP)) {
+    const parts = range.split(",");
+    for (const part of parts) {
+      if (part.includes("-")) {
+        const [start, end] = part.split("-").map(Number);
+        const z = Number(zip);
+        if (z >= start && z <= end) return state;
+      } else {
+        if (part.trim() === zip.trim()) return state;
+      }
+    }
+  }
+  return null;
+}
+
 function Stars({ count }: { count: number }) {
   return (
     <div className="stars" aria-label={`${count} out of 5 stars`}>
@@ -149,6 +246,131 @@ function Stars({ count }: { count: number }) {
         </svg>
       ))}
     </div>
+  );
+}
+
+function QuoteSection() {
+  const [zip, setZip] = useState("");
+  const [persons, setPersons] = useState([{ age: "", gender: "male" }]);
+  const [children, setChildren] = useState(0);
+  const [quote, setQuote] = useState<{ min: number; max: number } | null>(null);
+  const [error, setError] = useState("");
+
+  const handleAddPerson = () => {
+    if (persons.length < 2) {
+      setPersons([...persons, { age: "", gender: "female" }]);
+    }
+  };
+
+  const handleRemovePerson = (index: number) => {
+    setPersons(persons.filter((_, i) => i !== index));
+  };
+
+  const handlePersonChange = (index: number, key: 'age' | 'gender', value: string) => {
+    const newPersons = [...persons];
+    (newPersons[index] as any)[key] = value;
+    setPersons(newPersons);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setQuote(null);
+
+    const state = getStateFromZip(zip);
+    if (!state) {
+      setError("Online quoting is not yet available for your state. Please contact Daniel for a manual quote.");
+      return;
+    }
+
+    let minTotal = 0;
+    let maxTotal = 0;
+
+    for (const person of persons) {
+      const rate = calculateRate(Number(person.age), person.gender, state);
+      if (!rate) {
+        setError(`Quote data unavailable for age ${person.age}. We typically cover ages 18-64 online.`);
+        return;
+      }
+      minTotal += rate.min;
+      maxTotal += rate.max;
+    }
+
+    if (children > 0) {
+      const childRate = QUOTE_DATA["Child +"][state] || QUOTE_DATA["Child +"].default;
+      minTotal += childRate * children;
+      maxTotal += childRate * children;
+    }
+
+    setQuote({ min: minTotal, max: maxTotal });
+  };
+
+  return (
+    <section className="quote-section" id="quote">
+      <div className="container">
+        <div className="quote-card reveal">
+          <div className="quote-card__header">
+            <h2 className="quote-card__title">Get an Instant Quote Estimate</h2>
+            <p className="quote-card__subtitle">Enter your details for a personalized range based on your location and age.</p>
+          </div>
+          <form className="quote-form" onSubmit={handleSubmit}>
+            <div className="quote-form__row">
+              <div className="form-group">
+                <label>Zip Code</label>
+                <input type="text" placeholder="e.g. 30002" value={zip} onChange={(e) => setZip(e.target.value)} required maxLength={5} />
+              </div>
+            </div>
+
+            <div className="quote-persons">
+              {persons.map((p, i) => (
+                <div key={i} className="quote-person-row">
+                  <div className="form-group">
+                    <label>{i === 0 ? "Your Age" : "Spouse Age"}</label>
+                    <input type="number" placeholder="Age" value={p.age} onChange={(e) => handlePersonChange(i, "age", e.target.value)} required min={18} max={64} />
+                  </div>
+                  <div className="form-group">
+                    <label>Gender</label>
+                    <select value={p.gender} onChange={(e) => handlePersonChange(i, "gender", e.target.value)}>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </select>
+                  </div>
+                  {i > 0 && <button type="button" className="remove-person" onClick={() => handleRemovePerson(i)}>×</button>}
+                </div>
+              ))}
+            </div>
+
+            {persons.length < 2 && (
+              <button type="button" className="btn-add-spouse" onClick={handleAddPerson}>+ Add Spouse</button>
+            )}
+
+            <div className="quote-form__row" style={{ marginTop: '1rem' }}>
+              <div className="form-group">
+                <label>Number of Children</label>
+                <input type="number" value={children} onChange={(e) => setChildren(Number(e.target.value))} min={0} max={10} />
+              </div>
+            </div>
+
+            <button type="submit" className="btn btn--primary btn--lg quote-submit">Calculate My Quote Range</button>
+
+            {error && <p className="quote-error">{error}</p>}
+
+            {quote && (
+              <div className="quote-result">
+                <h3>Estimated Monthly Range</h3>
+                <div className="quote-price">
+                  <span className="price-val">${quote.min}</span>
+                  <span className="price-sep">-</span>
+                  <span className="price-val">${quote.max}</span>
+                </div>
+                <p className="quote-disclaimer">*This is a preliminary estimate. Final rates depend on the specific carrier and plan selection.</p>
+                <a href="#contact" className="btn btn--ghost-dark btn--sm" style={{ marginTop: '1rem' }}>Talk to Daniel for Final Rates</a>
+              </div>
+            )}
+          </form>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -432,6 +654,8 @@ export default function Home() {
             </svg>
           </div>
         </section>
+
+        <QuoteSection />
 
         {/* ══ CARRIERS ══ */}
         <section className="carriers">
