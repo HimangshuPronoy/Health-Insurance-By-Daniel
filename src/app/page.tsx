@@ -415,14 +415,14 @@ export default function Home() {
 
   function handleLeadSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const body = `New lead from website:%0A- Name: ${leadForm.name}%0A- Phone: ${leadForm.phone}%0A- Looking for: ${leadForm.type || "Not specified"}`;
+    const body = `Here is my info for a quote:%0A- Name: ${leadForm.name}%0A- Phone: ${leadForm.phone}%0A- Looking for: ${leadForm.type || "Not specified"}`;
     window.open(`sms:${DANIEL_PHONE}?&body=${body}`, "_self");
     setLeadSubmitted(true);
   }
 
   function handleContactSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const body = `New inquiry from website:%0A- Name: ${contactForm.first} ${contactForm.last}%0A- Phone: ${contactForm.phone || "Not provided"}%0A- Looking for: ${contactForm.type || "Not specified"}%0A- Message: ${contactForm.message || "None"}`;
+    const body = `Here is my info for a quote:%0A- Name: ${contactForm.first} ${contactForm.last}%0A- Phone: ${contactForm.phone || "Not provided"}%0A- Looking for: ${contactForm.type || "Not specified"}%0A- Message: ${contactForm.message || "None"}`;
     window.open(`sms:${DANIEL_PHONE}?&body=${body}`, "_self");
     setSubmitted(true);
   }
@@ -551,7 +551,7 @@ export default function Home() {
                 have to.
               </p>
               <div className="hero__actions reveal reveal--delay-2">
-                <a href="#contact" className="btn btn--primary btn--lg">
+                <a href="#quote" className="btn btn--primary btn--lg">
                   Get My Free Quote
                 </a>
                 <a href="#about" className="btn btn--outline-light btn--lg">
